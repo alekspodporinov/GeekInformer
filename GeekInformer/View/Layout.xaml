@@ -1,0 +1,120 @@
+﻿<Page
+    x:Class="GeekInformer.View.Layout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GeekInformer.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:infrastructure="using:GeekInformer.Infrastructure"
+    mc:Ignorable="d" SizeChanged="Layout_OnSizeChanged">
+
+    <!--<Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Name="SelectItmesBtn" FontFamily="OverflowCheckGlyph" Label="Select Items" Click="SelectItems">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xe762;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Name="AddItemBtn" Label="Add Item" Icon="Add" Click="AddItem" />
+            <AppBarButton x:Name="DeleteItemBtn" Label="Delete Item" Icon="Delete" Click="DeleteItem" />
+            <AppBarButton x:Name="DeleteItemsBtn" Label="Delete Items" Icon="Delete" Click="DeleteItems" />
+            <AppBarButton x:Name="CancelSelectionBtn" Label="Cancel" Icon="Cancel" Click="CancelSelection" />
+        </CommandBar>
+    </Page.BottomAppBar>-->
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+ 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MyAutoSuggestBox.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="510" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MyAutoSuggestBox.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <RelativePanel>
+            <Button x:Name="HamburgerButton" 
+                    RelativePanel.AlignLeftWithPanel="True"
+                    FontFamily="Segoe MDL2 Assets" 
+                    FontSize="20"
+                    Background="{Binding ElementName=menu, Path=Background}"
+                    Content="&#xE700;" 
+                    Click="HamburgerButtonClick" 
+                    HorizontalAlignment="Center"
+                    Width="45"
+                    Height="45"/>
+            
+            <TextBlock Name="TitleTextBlock" RelativePanel.RightOf="HamburgerButton"
+                       FontSize="28" 
+                       FontWeight="Bold" 
+                       Margin="30 0 0 0">
+                 <Run Text="{Binding ElementName=NavMenu, Path=SelectedItem.Name}" FontWeight="Bold" />
+            </TextBlock>
+
+            <AutoSuggestBox Name="MyAutoSuggestBox"
+                            QueryIcon="Find" 
+                            PlaceholderText="Search" 
+                            RelativePanel.AlignRightWithPanel="True"
+                            Width="200"
+                            Margin="0,0,10,0" />
+        </RelativePanel>
+
+        <SplitView Name="mySplitView" 
+                   Grid.Row="1" 
+                   OpenPaneLength="200" 
+                   DisplayMode="Inline"
+                   CompactPaneLength="48">
+            
+            <SplitView.Pane>
+                <ListView x:Name="NavMenu" 
+                          SelectionMode="Single" 
+                          IsItemClickEnabled="True" 
+                          ItemClick="NavMenuOnItemClick" 
+                          IsTemplateFocusTarget="True" 
+                          ItemsSource="{x:Bind MenuList}" 
+                          SelectedItem="{Binding SelectedMenuItem}">
+                    
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="infrastructure:NavMenuItem">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon x:Name="IconMenu" 
+                                          FontSize="24" 
+                                          Glyph="{x:Bind SymbolAsChar}" 
+                                          VerticalAlignment="Center" 
+                                          ToolTipService.ToolTip="{x:Bind Name}"/>
+                                <TextBlock FontSize="22" 
+                                           x:Name="TextMenu" 
+                                           Text="{x:Bind Name}"  
+                                           Margin="20 0 0 0"  />
+                            </StackPanel>
+                            
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Frame Name="myFrame"/>
+            </SplitView.Content>
+        </SplitView>
+
+    </Grid>
+</Page>
